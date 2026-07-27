@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  gas-scraper:
+    build: .
+    ports:
+      - "9696:9696"
+    environment:
+      - PORT=9696
+      - CACHE_TTL=43200
+    restart: unless-stopped
