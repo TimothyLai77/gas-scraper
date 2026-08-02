@@ -5,7 +5,12 @@ services:
     build: .
     ports:
       - "9696:9696"
+    volumes:
+      - gas-history:/app/data
     environment:
       - PORT=9696
       - CACHE_TTL=43200
     restart: unless-stopped
+
+volumes:
+  gas-history:

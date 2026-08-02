@@ -3,6 +3,7 @@ import cors from "cors";
 import path from "path";
 import NodeCache from "node-cache";
 import { scrapeGas } from "./scraper";
+import { getLastDays } from "./history";
 import { GasPriceData, DashboardResponse } from "./types";
 
 const app = express();
@@ -71,8 +72,12 @@ app.get("/api", async (_req: Request, res: Response) => {
   }
 });
 
+app.get("/api/history", (_req: Request, res: Response) => {
+  res.json(getLastDays());
+});
+
 app.get("/", (_req: Request, res: Response) => {
-  res.sendFile(path.join(__dirname, "..", "public", "dashboard.html"));
+  res.sendFile(path.join(__dirname, "..", "public", "index.html"));
 });
 
 app.use((_req: Request, res: Response) => {

@@ -11,3 +11,10 @@ export interface DashboardResponse {
   lastScrapeTime: string | null;
   error: string | null;
 }
+
+export interface HistoryRecord {
+  date: string;
+  priceToday: number;
+  priceTomorrow: number;
+  delta: number;
+}

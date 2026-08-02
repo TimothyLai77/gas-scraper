@@ -23,6 +23,7 @@ RUN npm install --omit=dev
 
 COPY --from=builder /app/dist ./dist
 COPY public ./public
+RUN mkdir -p data
 
 EXPOSE 9696
 
