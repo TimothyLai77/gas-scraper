@@ -1,6 +1,7 @@
 import axios from "axios";
 import dayjs from "dayjs";
 import { GasPriceData } from "./types";
+import { append as appendHistory } from "./history";
 
 const CITYNEWS_URL = "https://toronto.citynews.ca/toronto-gta-gas-prices/";
 
@@ -16,13 +17,22 @@ export async function scrapeGas(): Promise<GasPriceData> {
   const priceTomorrow = parseFloat(data.match(priceRegEx)?.[0]?.slice(0, -5));
   const priceToday = priceTomorrow - trend;
 
-  return {
+  const result: GasPriceData = {
     todaysDate: dateToday.format("D-MM-YYYY"),
     priceToday,
     dateTomorrow: dateTomorrow.format("D-MM-YYYY"),
     priceTomorrow,
     delta: trend,
   };
+
+  appendHistory({
+    date: dateToday.format("YYYY-MM-DD"),
+    priceToday,
+    priceTomorrow,
+    delta: trend,
+  });
+
+  return result;
 }
 
 function extractTrend(str: string): number {
