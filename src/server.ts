@@ -1,6 +1,7 @@
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import path from "path";
+import cron from "node-cron";
 import NodeCache from "node-cache";
 import { scrapeGas } from "./scraper";
 import { getLastDays } from "./history";
@@ -86,4 +87,16 @@ app.use((_req: Request, res: Response) => {
 
 app.listen(PORT, () => {
   console.log(`gas-scraper running on port ${PORT}`);
+});
+
+cron.schedule("0 1 * * *", async () => {
+  console.log("[cron] scheduled scrape started");
+  try {
+    await scrapeGas();
+    console.log("[cron] scheduled scrape completed");
+  } catch (err: any) {
+    console.error("[cron] scheduled scrape failed:", err.message);
+  }
+}, {
+  timezone: "America/Toronto",
 });
