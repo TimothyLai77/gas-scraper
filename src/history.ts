@@ -44,3 +44,13 @@ export function append(record: HistoryRecord): void {
 export function getLastDays(days = MAX_RECORDS): HistoryRecord[] {
   return read().slice(0, days);
 }
+
+export function hasToday(): boolean {
+  const today = new Date().toISOString().split("T")[0];
+  return read().some((r) => r.date === today);
+}
+
+export function getLatest(): HistoryRecord | null {
+  const records = read();
+  return records.length > 0 ? records[0] : null;
+}
