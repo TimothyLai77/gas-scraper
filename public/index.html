@@ -124,11 +124,16 @@
       margin-top: 0.25rem;
     }
 
-    .trend-indicator {
+    .trend-arrow {
       flex: 0.5;
       text-align: center;
       font-size: 1.5rem;
-      padding: 0 0.5rem;
+      color: var(--muted);
+    }
+
+    .trend-indicator {
+      font-size: 1.5rem;
+      margin-left: 0.25rem;
     }
 
     .trend-indicator.up { color: var(--up); }
@@ -248,11 +253,14 @@
             <div class="price-unit">¢ / L</div>
           </div>
 
-          <div id="trendIndicator" class="trend-indicator same">→</div>
+          <div class="trend-arrow">→</div>
 
           <div class="price-column tomorrow">
             <div class="price-label">Tomorrow</div>
-            <div id="tomorrowPrice" class="price-value">--</div>
+            <div class="price-value">
+              <span id="tomorrowPrice">--</span>
+              <span id="trendIndicator" class="trend-indicator same">→</span>
+            </div>
             <div class="price-unit">¢ / L</div>
           </div>
         </div>
