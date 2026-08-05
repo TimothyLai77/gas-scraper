@@ -87,32 +87,58 @@
       margin-bottom: 1rem;
     }
 
-    .tomorrow-section {
-      text-align: center;
+    .price-comparison {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    .tomorrow-label {
-      font-size: 0.85rem;
+    .price-column {
+      flex: 1;
+    }
+
+    .price-column.today {
+      text-align: left;
+    }
+
+    .price-column.tomorrow {
+      text-align: right;
+    }
+
+    .price-label {
+      font-size: 0.8rem;
       color: var(--muted);
       margin-bottom: 0.25rem;
     }
 
-    .tomorrow-price {
-      font-size: 3.5rem;
+    .price-value {
+      font-size: 2.5rem;
       font-weight: 700;
       color: var(--text);
       line-height: 1;
     }
 
-    .tomorrow-unit {
+    .price-unit {
       font-size: 0.9rem;
       color: var(--muted);
       margin-top: 0.25rem;
     }
 
+    .trend-indicator {
+      flex: 0.5;
+      text-align: center;
+      font-size: 1.5rem;
+      padding: 0 0.5rem;
+    }
+
+    .trend-indicator.up { color: var(--up); }
+    .trend-indicator.down { color: var(--down); }
+    .trend-indicator.same { color: var(--same); }
+
     .trend-badge {
-      display: inline-block;
-      margin-top: 0.75rem;
+      display: block;
+      text-align: center;
+      margin-top: 1rem;
       padding: 0.3rem 0.8rem;
       font-size: 0.8rem;
       font-weight: 600;
@@ -122,22 +148,6 @@
     .trend-badge.up { background: rgba(239, 68, 68, 0.15); color: var(--up); }
     .trend-badge.down { background: rgba(34, 197, 94, 0.15); color: var(--down); }
     .trend-badge.same { background: rgba(107, 114, 128, 0.15); color: var(--same); }
-
-    .today-section {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .today-label {
-      font-size: 0.8rem;
-      color: var(--muted);
-    }
-
-    .today-price {
-      font-size: 1.5rem;
-      font-weight: 600;
-    }
 
     .status-bar {
       display: flex;
@@ -230,19 +240,24 @@
     <div id="errorBanner" class="error-banner"></div>
 
     <div id="dashboard" class="loading">
-      <div class="card tomorrow-section">
-        <div class="tomorrow-label">Tomorrow</div>
-        <div class="tomorrow-price">--</div>
-        <div class="tomorrow-unit">¢ / litre</div>
-        <div id="trendBadge" class="trend-badge same">--</div>
-      </div>
+      <div class="card">
+        <div class="price-comparison">
+          <div class="price-column today">
+            <div class="price-label">Today</div>
+            <div id="todayPrice" class="price-value">--</div>
+            <div class="price-unit">¢ / L</div>
+          </div>
 
-      <div class="card today-section">
-        <div>
-          <div class="today-label">Today</div>
-          <div class="today-price">--</div>
+          <div id="trendIndicator" class="trend-indicator same">→</div>
+
+          <div class="price-column tomorrow">
+            <div class="price-label">Tomorrow</div>
+            <div id="tomorrowPrice" class="price-value">--</div>
+            <div class="price-unit">¢ / L</div>
+          </div>
         </div>
-        <div class="today-label">¢/L</div>
+
+        <div id="trendBadge" class="trend-badge same">--</div>
       </div>
 
       <div class="status-bar">
@@ -261,10 +276,11 @@
 
   <script>
     const els = {
-      tomorrowPrice: document.querySelector('.tomorrow-price'),
-      tomorrowLabel: document.querySelector('.tomorrow-label'),
+      tomorrowPrice: document.getElementById('tomorrowPrice'),
+      tomorrowLabel: document.querySelector('.price-column.tomorrow .price-label'),
       trendBadge: document.getElementById('trendBadge'),
-      todayPrice: document.querySelector('.today-price'),
+      trendIndicator: document.getElementById('trendIndicator'),
+      todayPrice: document.getElementById('todayPrice'),
       lastScrape: document.getElementById('lastScrape'),
       errorBanner: document.getElementById('errorBanner'),
       refreshBtn: document.getElementById('refreshBtn'),
@@ -319,7 +335,6 @@
         }
 
         const d = json.data;
-        els.tomorrowLabel.textContent = formatLabel(d.dateTomorrow, 'Tomorrow');
         els.tomorrowPrice.textContent = d.priceTomorrow;
         els.todayPrice.textContent = d.priceToday;
         setTrend(d.delta);
@@ -337,12 +352,18 @@
       if (delta > 0) {
         els.trendBadge.className = 'trend-badge up';
         els.trendBadge.textContent = `▲ +${delta}¢ tomorrow`;
+        els.trendIndicator.className = 'trend-indicator up';
+        els.trendIndicator.textContent = '▲';
       } else if (delta < 0) {
         els.trendBadge.className = 'trend-badge down';
         els.trendBadge.textContent = `▼ ${delta}¢ tomorrow`;
+        els.trendIndicator.className = 'trend-indicator down';
+        els.trendIndicator.textContent = '▼';
       } else {
         els.trendBadge.className = 'trend-badge same';
         els.trendBadge.textContent = '→ unchanged';
+        els.trendIndicator.className = 'trend-indicator same';
+        els.trendIndicator.textContent = '→';
       }
     }
 
