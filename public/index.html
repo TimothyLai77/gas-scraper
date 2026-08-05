@@ -6,29 +6,29 @@
   <title>Gas Price Dashboard</title>
   <style>
     :root {
-      --bg: #0f1117;
-      --surface: #181a24;
-      --text: #e5e7eb;
-      --muted: #8b8fa3;
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --text: #e0e0e0;
+      --muted: #666666;
       --up: #ef4444;
       --down: #22c55e;
-      --same: #6b7280;
-      --accent: #6366f1;
-      --error-bg: #7f1d1d;
-      --error-text: #fecaca;
+      --same: #555555;
+      --accent: #888888;
+      --error-bg: #1a0a0a;
+      --error-text: #ff6b6b;
     }
 
     [data-theme="light"] {
-      --bg: #f5f5f5;
-      --surface: #ffffff;
-      --text: #1f2937;
-      --muted: #6b7280;
-      --up: #dc2626;
-      --down: #16a34a;
-      --same: #9ca3af;
-      --accent: #4f46e5;
-      --error-bg: #fef2f2;
-      --error-text: #dc2626;
+      --bg: #f0f0f0;
+      --surface: #f7f7f7;
+      --text: #111111;
+      --muted: #777777;
+      --up: #c00000;
+      --down: #007a00;
+      --same: #888888;
+      --accent: #555555;
+      --error-bg: #fff0f0;
+      --error-text: #c00000;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -67,7 +67,7 @@
 
     .theme-toggle {
       background: none;
-      border: 1px solid var(--muted);
+      border: 1px solid #333333;
       color: var(--muted);
       padding: 0.25rem 0.5rem;
       cursor: pointer;
@@ -76,13 +76,13 @@
     }
 
     .theme-toggle:hover {
-      border-color: var(--accent);
-      color: var(--accent);
+      border-color: var(--text);
+      color: var(--text);
     }
 
     .card {
       background: var(--surface);
-      border: 1px solid var(--muted);
+      border: 1px solid #222222;
       padding: 1.5rem;
       margin-bottom: 1rem;
     }
@@ -150,7 +150,7 @@
 
     .refresh-btn {
       background: none;
-      border: 1px solid var(--muted);
+      border: 1px solid #333333;
       color: var(--muted);
       padding: 0.3rem 0.7rem;
       cursor: pointer;
@@ -159,8 +159,8 @@
     }
 
     .refresh-btn:hover {
-      border-color: var(--accent);
-      color: var(--accent);
+      border-color: var(--text);
+      color: var(--text);
     }
 
     .refresh-btn:disabled {
@@ -195,7 +195,7 @@
 
     .chart-card {
       background: var(--surface);
-      border: 1px solid var(--muted);
+      border: 1px solid #222222;
       padding: 1.5rem;
       margin-bottom: 1rem;
     }
@@ -375,8 +375,8 @@
           datasets: [{
             label: 'Price',
             data: records.map(r => r.priceTomorrow),
-            borderColor: '#6366f1',
-            backgroundColor: 'rgba(99,102,241,0.1)',
+            borderColor: '#888888',
+            backgroundColor: 'rgba(136,136,136,0.1)',
             borderWidth: 2,
             pointRadius: 2,
             pointHoverRadius: 5,
