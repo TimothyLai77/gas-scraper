@@ -16,7 +16,6 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 ENV PORT=9696
-ENV CACHE_TTL=43200
 ENV TZ=America/Toronto
 
 RUN apk add --no-cache tzdata
