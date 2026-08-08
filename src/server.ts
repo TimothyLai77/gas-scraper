@@ -107,7 +107,7 @@ app.listen(PORT, () => {
   console.log(`gas-scraper running on port ${PORT}`);
 });
 
-cron.schedule("0 1 * * *", async () => {
+cron.schedule("0 1,12,18 * * *", async () => {
   console.log(`[${getTimestamp()}] [cron] scheduled scrape started`);
   try {
     await scrapeGas();
