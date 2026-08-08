@@ -13,6 +13,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 
+const getTimestamp = () => new Date().toISOString();
+
 function historyToGasPrice(record: HistoryRecord): GasPriceData {
   const [y, m, d] = record.date.split("-").map(Number);
   const dateToday = new Date(y, m - 1, d);
@@ -38,20 +40,20 @@ async function getGasPrice(): Promise<GasPriceData> {
   if (hasToday()) {
     const record = getLatest();
     if (record) {
-      console.log("[history] today's data available");
+      console.log(`[${getTimestamp()}] [history] today's data available`);
       return historyToGasPrice(record);
     }
   }
 
-  console.log("[history] scraping fresh");
+  console.log(`[${getTimestamp()}] [history] scraping fresh`);
   try {
     const data = await scrapeGas();
     return data;
   } catch (err: any) {
-    console.error("[error] scrape failed:", err.message);
+    console.error(`[${getTimestamp()}] [error] scrape failed:`, err.message);
     const fallback = getLatest();
     if (fallback) {
-      console.log("[history] returning last known data");
+      console.log(`[${getTimestamp()}] [history] returning last known data`);
       return historyToGasPrice(fallback);
     }
     throw err;
@@ -106,12 +108,12 @@ app.listen(PORT, () => {
 });
 
 cron.schedule("0 1 * * *", async () => {
-  console.log("[cron] scheduled scrape started");
+  console.log(`[${getTimestamp()}] [cron] scheduled scrape started`);
   try {
     await scrapeGas();
-    console.log("[cron] scheduled scrape completed");
+    console.log(`[${getTimestamp()}] [cron] scheduled scrape completed`);
   } catch (err: any) {
-    console.error("[cron] scheduled scrape failed:", err.message);
+    console.error(`[${getTimestamp()}] [cron] scheduled scrape failed:`, err.message);
   }
 }, {
   timezone: "America/Toronto",
