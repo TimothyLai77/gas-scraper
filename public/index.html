@@ -248,6 +248,20 @@
       display: block;
     }
 
+    .stale-warning {
+      background: rgba(234, 179, 8, 0.1);
+      border: 1px solid rgba(234, 179, 8, 0.4);
+      padding: 0.75rem 1rem;
+      font-size: 0.8rem;
+      color: #eab308;
+      display: none;
+      margin-bottom: 1rem;
+    }
+
+    .stale-warning.visible {
+      display: block;
+    }
+
     .loading {
       opacity: 0.5;
       pointer-events: none;
@@ -295,6 +309,7 @@
     </header>
 
     <div id="errorBanner" class="error-banner"></div>
+    <div id="staleWarning" class="stale-warning"></div>
 
     <div id="dashboard" class="loading">
       <div class="card">
@@ -344,6 +359,7 @@
       trendIndicator: document.getElementById('trendIndicator'),
       lastScrape: document.getElementById('lastScrape'),
       errorBanner: document.getElementById('errorBanner'),
+      staleWarning: document.getElementById('staleWarning'),
       refreshBtn: document.getElementById('refreshBtn'),
       dashboard: document.getElementById('dashboard'),
       themeToggle: document.getElementById('themeToggle'),
@@ -372,10 +388,16 @@
       applyTheme(current === 'dark' ? 'light' : 'dark');
     }
 
+    function getTodayISO() {
+      const d = new Date();
+      return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    }
+
     async function fetchData() {
       els.dashboard.classList.add('loading');
       els.refreshBtn.disabled = true;
       els.errorBanner.classList.remove('visible');
+      els.staleWarning.classList.remove('visible');
 
       try {
         const [apiRes, histRes] = await Promise.all([
@@ -392,7 +414,15 @@
         }
 
         if (json.error) {
-          showError(json.error + ' (showing last known data)');
+          els.staleWarning.textContent = '⚠ CityNews hasn\'t updated today yet — showing last known prices from ' + formatTime(json.lastScrapeTime);
+          els.staleWarning.classList.add('visible');
+        } else {
+          const today = getTodayISO();
+          const latest = history.length > 0 ? history[history.length - 1] : null;
+          if (latest && latest.date < today) {
+            els.staleWarning.textContent = '⚠ CityNews hasn\'t updated today yet — showing last known prices from ' + formatDateFromHistory(latest.date);
+            els.staleWarning.classList.add('visible');
+          }
         }
 
         const d = json.data;
@@ -513,6 +543,12 @@
       } catch {
         return '--';
       }
+    }
+
+    function formatDateFromHistory(dateStr) {
+      const [y, m, d] = dateStr.split('-');
+      const date = new Date(parseInt(y), parseInt(m) - 1, parseInt(d));
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     }
 
     els.refreshBtn.addEventListener('click', fetchData);
