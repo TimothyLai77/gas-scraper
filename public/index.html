@@ -336,11 +336,12 @@
 
   <script>
     const els = {
+      todayPrice: document.getElementById('todayPrice'),
       tomorrowPrice: document.getElementById('tomorrowPrice'),
+      todayLabel: document.querySelector('.price-column.today .price-label'),
       tomorrowLabel: document.querySelector('.price-column.tomorrow .price-label'),
       trendBadge: document.getElementById('trendBadge'),
       trendIndicator: document.getElementById('trendIndicator'),
-      todayPrice: document.getElementById('todayPrice'),
       lastScrape: document.getElementById('lastScrape'),
       errorBanner: document.getElementById('errorBanner'),
       refreshBtn: document.getElementById('refreshBtn'),
@@ -397,6 +398,8 @@
         const d = json.data;
         els.tomorrowPrice.textContent = d.priceTomorrow;
         els.todayPrice.textContent = d.priceToday;
+        els.todayLabel.textContent = 'Today (' + formatLabel(d.todaysDate, '').split(', ')[0] + ')';
+        els.tomorrowLabel.textContent = 'Tomorrow (' + formatLabel(d.dateTomorrow, '').split(', ')[0] + ')';
         setTrend(d.delta);
         els.lastScrape.textContent = 'Last update: ' + formatTime(json.lastScrapeTime);
         renderChart(history);
