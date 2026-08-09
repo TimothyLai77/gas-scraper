@@ -85,7 +85,7 @@ app.get("/api", async (_req: Request, res: Response) => {
     const response: DashboardResponse = {
       data: null,
       lastScrapeTime: null,
-      error: err.message || "server error",
+      error: "server error",
     };
     res.status(500).json(response);
   }
