@@ -9,7 +9,7 @@ export async function scrapeGas(): Promise<GasPriceData> {
   const dateRegEx = /\w+\s\d+,\s\d+/gm;
   const priceRegEx = /(\d+.\d cent)/gm;
 
-  const { data } = await axios.get(CITYNEWS_URL);
+  const { data } = await axios.get(CITYNEWS_URL, { timeout: 10000 });
   const trend = extractTrend(data);
 
   const dateTomorrow = dayjs(data.match(dateRegEx)?.[0]);
