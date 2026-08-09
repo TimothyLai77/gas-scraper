@@ -388,6 +388,11 @@
       applyTheme(current === 'dark' ? 'light' : 'dark');
     }
 
+    function getTodayISO() {
+      const d = new Date();
+      return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    }
+
     async function fetchData() {
       els.dashboard.classList.add('loading');
       els.refreshBtn.disabled = true;
@@ -411,6 +416,13 @@
         if (json.error) {
           els.staleWarning.textContent = '⚠ CityNews hasn\'t updated today yet — showing last known prices from ' + formatTime(json.lastScrapeTime);
           els.staleWarning.classList.add('visible');
+        } else {
+          const today = getTodayISO();
+          const latest = history.length > 0 ? history[history.length - 1] : null;
+          if (latest && latest.date < today) {
+            els.staleWarning.textContent = '⚠ CityNews hasn\'t updated today yet — showing last known prices from ' + formatDateFromHistory(latest.date);
+            els.staleWarning.classList.add('visible');
+          }
         }
 
         const d = json.data;
@@ -531,6 +543,12 @@
       } catch {
         return '--';
       }
+    }
+
+    function formatDateFromHistory(dateStr) {
+      const [y, m, d] = dateStr.split('-');
+      const date = new Date(parseInt(y), parseInt(m) - 1, parseInt(d));
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     }
 
     els.refreshBtn.addEventListener('click', fetchData);
