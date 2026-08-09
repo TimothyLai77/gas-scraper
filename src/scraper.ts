@@ -1,6 +1,12 @@
 import axios from "axios";
 import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 import { GasPriceData } from "./types";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault("America/Toronto");
 import { append as appendHistory } from "./history";
 
 const CITYNEWS_URL = "https://toronto.citynews.ca/toronto-gta-gas-prices/";
@@ -9,7 +15,7 @@ export async function scrapeGas(): Promise<GasPriceData> {
   const dateRegEx = /\w+\s\d+,\s\d+/gm;
   const priceRegEx = /(\d+.\d cent)/gm;
 
-  const { data } = await axios.get(CITYNEWS_URL);
+  const { data } = await axios.get(CITYNEWS_URL, { timeout: 10000 });
   const trend = extractTrend(data);
 
   const dateTomorrow = dayjs(data.match(dateRegEx)?.[0]);

@@ -1,6 +1,13 @@
 import fs from "fs";
 import path from "path";
+import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 import { HistoryRecord } from "./types";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault("America/Toronto");
 
 const HISTORY_FILE = path.resolve(__dirname, "..", "data", "history.json");
 const MAX_RECORDS = 30;
@@ -46,7 +53,7 @@ export function getLastDays(days = MAX_RECORDS): HistoryRecord[] {
 }
 
 export function hasToday(): boolean {
-  const today = new Date().toISOString().split("T")[0];
+  const today = dayjs().tz("America/Toronto").format("YYYY-MM-DD");
   return read().some((r) => r.date === today);
 }
 
