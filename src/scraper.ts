@@ -1,6 +1,12 @@
 import axios from "axios";
 import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 import { GasPriceData } from "./types";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault("America/Toronto");
 import { append as appendHistory } from "./history";
 
 const CITYNEWS_URL = "https://toronto.citynews.ca/toronto-gta-gas-prices/";
