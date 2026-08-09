@@ -23,6 +23,8 @@
       --accent: #888888;
       --error-bg: #1a0a0a;
       --error-text: #ff6b6b;
+      --warning-bg: rgba(234, 179, 8, 0.1);
+      --warning-text: #facc15;
     }
 
     [data-theme="light"] {
@@ -36,6 +38,8 @@
       --accent: #555555;
       --error-bg: #fff0f0;
       --error-text: #c00000;
+      --warning-bg: #fffbeb;
+      --warning-text: #92400e;
     }
 
     * {
@@ -249,11 +253,11 @@
     }
 
     .stale-warning {
-      background: rgba(234, 179, 8, 0.1);
-      border: 1px solid rgba(234, 179, 8, 0.4);
+      background: var(--warning-bg);
+      border: 1px solid var(--warning-text);
       padding: 0.75rem 1rem;
       font-size: 0.8rem;
-      color: #eab308;
+      color: var(--warning-text);
       display: none;
       margin-bottom: 1rem;
     }
