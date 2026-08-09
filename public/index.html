@@ -248,6 +248,20 @@
       display: block;
     }
 
+    .stale-warning {
+      background: rgba(234, 179, 8, 0.1);
+      border: 1px solid rgba(234, 179, 8, 0.4);
+      padding: 0.75rem 1rem;
+      font-size: 0.8rem;
+      color: #eab308;
+      display: none;
+      margin-bottom: 1rem;
+    }
+
+    .stale-warning.visible {
+      display: block;
+    }
+
     .loading {
       opacity: 0.5;
       pointer-events: none;
@@ -295,6 +309,7 @@
     </header>
 
     <div id="errorBanner" class="error-banner"></div>
+    <div id="staleWarning" class="stale-warning"></div>
 
     <div id="dashboard" class="loading">
       <div class="card">
@@ -344,6 +359,7 @@
       trendIndicator: document.getElementById('trendIndicator'),
       lastScrape: document.getElementById('lastScrape'),
       errorBanner: document.getElementById('errorBanner'),
+      staleWarning: document.getElementById('staleWarning'),
       refreshBtn: document.getElementById('refreshBtn'),
       dashboard: document.getElementById('dashboard'),
       themeToggle: document.getElementById('themeToggle'),
@@ -376,6 +392,7 @@
       els.dashboard.classList.add('loading');
       els.refreshBtn.disabled = true;
       els.errorBanner.classList.remove('visible');
+      els.staleWarning.classList.remove('visible');
 
       try {
         const [apiRes, histRes] = await Promise.all([
@@ -392,7 +409,8 @@
         }
 
         if (json.error) {
-          showError(json.error + ' (showing last known data)');
+          els.staleWarning.textContent = '⚠ CityNews hasn\'t updated today yet — showing last known prices from ' + formatTime(json.lastScrapeTime);
+          els.staleWarning.classList.add('visible');
         }
 
         const d = json.data;
